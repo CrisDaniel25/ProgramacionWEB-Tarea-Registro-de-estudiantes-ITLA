@@ -18,21 +18,15 @@
 </nav>
 <?php
 	session_start();
- 	if(array_key_exists('data', $_SESSION) AND !empty($_SESSION['data'])){
- 		$allData = $_SESSION['data'];
- 	}
-
-
+	if(array_key_exists('data', $_SESSION) AND !empty($_SESSION['data'])){
+		$editData = $_SESSION['data'][$_GET['id']];
+	}
+	$_SESSION['id'] = $_GET['id'];
 ?>
 </header>
 
 <div class="container">
-
-<div class="row">
-
-<div class="col"> 
-
-<form action="Add.php" method="post">
+<form action="Update.php" method="post">
 <div class="form-group">
   <div class="input-group">
     <div class="input-group-prepend">
@@ -40,7 +34,7 @@
         <i class="fas fa-user-circle"></i>
       </div>
     </div>
-    <input class="form-control" placeholder="Nombre" name="nombre" type="text">
+    <input class="form-control" placeholder="Nombre" name="nombre" value="<?php echo $editData['nombre'];?>" type="text">
   </div>
 </div>
 
@@ -51,13 +45,34 @@
         <i class="fas fa-user-circle"></i>
       </div>
     </div>
-    <input class="form-control" placeholder="Apellido" name="apellido" type="text">
+    <input class="form-control" placeholder="Apellido" name="apellido" value="<?php echo $editData['apellido'];?>" type="text">
   </div>
 </div>
 
-<div class="form-group">  
-  <input type="radio" name="status" value="Activo"> Activo 
-	<input type="radio" name="status" value="Inactivo"> Inactivo
+<div class="form-group">
+<label>Status</label>
+<?php 
+					if($editData['status'] == "Activo"){
+				 ?>
+                 <input type="radio" checked="checked" name="status" value="Activo"> Activo 
+				<?php 
+					}else{
+				 ?>
+				 <input type="radio" name="status" value="Activo"> Activo 
+				 <?php 
+					}
+				  ?>
+				  <?php 
+				  if($editData['status'] == "Inactivo"){
+				   ?>
+				<input type="radio" checked="checked" name="status" value="Inactivo"> Inactivo
+				<?php 
+				  }else{
+				 ?>
+				 <input type="radio" name="status" value="Inactivo"> Inactivo
+				 <?php 
+				  }
+				  ?>
 </div>
 
 <div class="form-group">
@@ -67,10 +82,10 @@
         <i class="fas fa-university"></i>
       </div>
     </div>
-    <input class="form-control" name="carrera" placeholder="Carrera" type="text">
+    <input class="form-control" name="carrera" placeholder="Carrera" value="<?php echo $editData['carrera'];?>" type="text">
   </div>
 </div>
-<button type="submit" name="create" value="Create" class="btn btn-success">
+<button type="submit" name="update" value="Update" class="btn btn-success">
   <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-archive-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z"/>
   </svg>
@@ -80,52 +95,6 @@
 </svg>
 </button>
 </form>
-</div>
-
-<div class="col">    
-  <table class="table table-hover">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Apellido</th>
-      <th scope="col">Status</th>
-      <th scope="col">Carrera</th>
-      <th scope="col"></th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php 
-			if(!empty($allData)){
-				foreach ($allData as $key => $value) {
-		 ?>
-    <tr>
-      <td scope><?php echo $key+1;?></td>
-			<td><?php echo $value['nombre'];?></td>
-			<td><?php echo $value['apellido'];?></td>
-			<td><?php echo $value['status'];?></td>
-			<td><?php echo $value['carrera']; ?></td>
-      <td>
-<a href="Delete.php?id=<?php echo $key;?>" class="btn btn-danger"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
-</svg>
-</a>
-<a href="Edit.php?id=<?php echo $key;?>" class="btn btn-warning"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-  </svg>
-</a>
-      </td>
-    </tr>
-    <?php 
-				}
-			}
-		 ?>
-  </tbody>
-</table>
-</div>
-</div>
 </div>
 
 <footer class="page-footer font-small special-color-dark pt-4"> 
